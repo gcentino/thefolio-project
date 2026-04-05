@@ -22,7 +22,7 @@ connectDB();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://thefolio.vercel.app'  // PALITAN MO ITO NG ACTUAL VERCEL URL MO
+    'https://thefolio-project-zeta.vercel.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -30,15 +30,13 @@ app.use(cors({
 }));
 
 // Handle preflight requests for all routes
-app.options('*', cors({
-  origin: [
-    'http://localhost:3000',
-    'https://thefolio-project-zeta.vercel.app/'  // PALITAN DIN ITO
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://thefolio-project-zeta.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
 
 // Parse incoming JSON request bodies
 app.use(express.json());
