@@ -1,4 +1,3 @@
-//backend/server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -17,44 +16,44 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// ── CORS Middleware ──
+// ✅ FIXED CORS
 const allowedOrigins = [
   'http://localhost:3000',
   'https://thefolio-project-3czf4viry-gcentinos-projects.vercel.app',
-  'https://thefolio-project-zeta.vercel.app'
+  'https://thefolio-project-zeta.vercel.app',
+  'https://thefolio-project-6uwruzn3-gcentinos-projects.vercel.app' // ✅ ADD THIS
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true
 }));
 
-// Handle preflight requests
+// Handle preflight
 app.options('*', cors());
 
-// Parse incoming JSON request bodies
+// Middleware
 app.use(express.json());
 
-// Serve uploaded image files
+// Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ── Routes ──
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/contact', contactRoutes);
 
-// ── Start Server ──
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
