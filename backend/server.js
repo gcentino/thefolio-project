@@ -18,9 +18,12 @@ const app = express();
 connectDB();
 
 // ── Middleware ─────────────────────────────────────────────────
-// CORS setup - Allow React (port 3000) to call this server
+// CORS setup - Allow React (port 3000) and Vercel to call this server
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://thefolio.vercel.app'  // PALITAN MO ITO NG ACTUAL VERCEL URL MO
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -28,7 +31,10 @@ app.use(cors({
 
 // Handle preflight requests for all routes
 app.options('*', cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://thefolio-project-zeta.vercel.app/'  // PALITAN DIN ITO
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -38,7 +44,6 @@ app.options('*', cors({
 app.use(express.json());
 
 // Serve uploaded image files as public URLs
-// e.g. http://localhost:5000/uploads/my-image.jpg
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── Routes ────────────────────────────────────────────────────
